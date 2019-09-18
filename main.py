@@ -18,13 +18,14 @@ def get_proxies():
     return proxies
 
 
-def get_page_content(url):
+def get_page_content(url, proxy_pool):
+    print(next(proxy_pool))
     pass
 
 #If you are copy pasting proxy ips, put in the list below
 #proxies = ['121.129.127.209:80', '124.41.215.238:45169', '185.93.3.123:8080', '194.182.64.67:3128', '106.0.38.174:8080', '163.172.175.210:3128', '13.92.196.150:8080']
-proxies = get_proxies()
-proxy_pool = cycle(proxies)
+proxy_list = get_proxies()
+proxy_pool = cycle(proxy_list)
 
 ua = UserAgent()
 #print(ua.random)
@@ -42,7 +43,7 @@ chrome_options.add_argument('--headless')
 chrome_options.add_argument('--proxy-server={}'.format(proxy))
 chrome_options.add_argument('user-agent={}'.format(ua.random))
 chrome_options.add_argument('--no-sandbox') # required when running as root user. otherwise you would get no sandbox errors.
-driver = webdriver.Chrome(chrome_options=chrome_options,
+driver = webdriver.Chrome(options=chrome_options,
       service_args=['--verbose', '--log-path=/tmp/chromedriver.log'])
 
 # Log path added via service_args to see errors if something goes wrong (always a good idea - many of the errors I encountered were described in the logs)
@@ -50,6 +51,8 @@ driver = webdriver.Chrome(chrome_options=chrome_options,
 url = 'https://python.org'
 #url = 'https://seekingalpha.com/symbol/COST/dividends/history'
 driver.get(url)
+print(driver.page_source)
+print("\n\n")
 print(driver.title)
 print(f"|{driver.title}|")
 if not driver.title:
@@ -59,7 +62,8 @@ else:
 
 #print(driver.page_source)
 
-t = get_page_content(url)
+print(proxy_list)
+t = get_page_content(url, proxy_pool)
 #with open("web.html", "w") as text_file:
 #      text_file.write(driver.page_source)
 
