@@ -11,5 +11,8 @@ run: build_image
 run_pwd: build_image
 		$(DOCKER_RUN) pwd
 
+dividends: build_image
+		$(DOCKER_RUN) python main.py
+
 build_image:
 		docker build -t $(DOCKER_IMAGE) .
